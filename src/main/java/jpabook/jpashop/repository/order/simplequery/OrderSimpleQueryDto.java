@@ -15,7 +15,11 @@ public class OrderSimpleQueryDto {
     private OrderStatus orderStatus;
     private Address address;
 
-    public OrderSimpleQueryDto(Long orderId, String name, LocalDateTime orderDate, OrderStatus orderStatus, Address address) {
+    public OrderSimpleQueryDto(Long orderId,
+                               String name,
+                               LocalDateTime orderDate,
+                               OrderStatus orderStatus,
+                               Address address) {
         this.orderId = orderId;
         this.name = name;
         this.orderDate = orderDate;

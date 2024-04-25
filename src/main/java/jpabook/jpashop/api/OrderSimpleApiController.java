@@ -31,6 +31,14 @@ public class OrderSimpleApiController {
     private final OrderRepository orderRepository;
     private final OrderSimpleQueryRepository orderSimpleQueryRepository; //의존관계 주입
 
+
+    /**
+     * [** 성능 최적화 정리 **]
+     * 1. 우선 Entity -> DTO 변환 방법 선택
+     * 2. 필요하면 fetch join 성능 최적화 -> 대부분의 이슈 해결
+     * 3. 그래도 안되면 DTO를 직접 조회하는 방법 사용
+     * 4. 최후로는 JPA가 제공하는 네이티브 SQL 혹은 스프링 JDBC Template을 사용해 SQL 직접 사용
+
     /**
      * V1. 엔티티 직접 노출
      * - Hibernate5Module 모듈 등록, LAZY=null 처리
@@ -75,11 +83,14 @@ public class OrderSimpleApiController {
         return result;
     }
 
+    /**
+     * V4. JPA에서 바로 DTO로 꺼내는 방법
+     *
+     */
     @GetMapping("/api/v4/simple-orders")
     public List<OrderSimpleQueryDto> ordersV4() {
         return orderSimpleQueryRepository.findOrderDtos();
     }
-
 
     @Data
     static class SimpleOrderDto {

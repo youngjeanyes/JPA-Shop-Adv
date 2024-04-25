@@ -19,7 +19,14 @@ public class OrderFlatDto {
     private int orderPrice; //주문 가격
     private int count;      //주문 수량
 
-    public OrderFlatDto(Long orderId, String name, LocalDateTime orderDate, OrderStatus orderStatus, Address address, String itemName, int orderPrice, int count) {
+    public OrderFlatDto(Long orderId,
+                        String name,
+                        LocalDateTime orderDate,
+                        OrderStatus orderStatus,
+                        Address address,
+                        String itemName,
+                        int orderPrice,
+                        int count) {
         this.orderId = orderId;
         this.name = name;
         this.orderDate = orderDate;
