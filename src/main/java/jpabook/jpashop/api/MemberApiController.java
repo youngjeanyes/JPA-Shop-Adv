@@ -25,7 +25,7 @@ public class MemberApiController {
      *   - 실무에서는 회원 엔티티를 위한 API가 다양하게 만들어지는데, 한 엔티티에 각각의 API를 위한 모든 요청 요구사항을 담기는 어렵다.
      * - 엔티티가 변경되면 API 스펙이 변한다.
      * 결론
-     * - API 요청 스펙에 맞추어 별도의 DTO를 파라미터로 받는다.
+     * - 반드시 API 요청 스펙에 맞추어 별도의 DTO를 파라미터로 받는다.
      */
     @PostMapping("/api/v1/members")
     public CreateMemberResponse saveMemberV1(@RequestBody @Valid Member member) {
@@ -47,7 +47,8 @@ public class MemberApiController {
      * 수정 API
      */
     @PutMapping("/api/v2/members/{id}")
-    public UpdateMemberResponse updateMemberV2(@PathVariable("id") Long id, @RequestBody @Valid UpdateMemberRequest request) {
+    public UpdateMemberResponse updateMemberV2(@PathVariable("id") Long id,
+                                               @RequestBody @Valid UpdateMemberRequest request) {
         memberService.update(id, request.getName());
         Member findMember = memberService.findOne(id);
         return new UpdateMemberResponse(findMember.getId(), findMember.getName());

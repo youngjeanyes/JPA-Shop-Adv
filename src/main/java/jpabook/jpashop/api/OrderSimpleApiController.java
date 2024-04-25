@@ -48,13 +48,15 @@ public class OrderSimpleApiController {
 
     /**
      * V2. 엔티티를 조회해서 DTO로 변환(fetch join 사용X)
-     * - 단점: 지연로딩으로 쿼리 N번 호출
+     * - 단점: 지연로딩으로 쿼리 N번 호출 ex) 주문 10개면 총 1 + (10 * N) 번 쿼리 호출
      */
     @GetMapping("/api/v2/simple-orders")
     public List<SimpleOrderDto> ordersV2() {
         List<Order> orders = orderRepository.findAll();
+
         List<SimpleOrderDto> result = orders.stream()
-                .map(o -> new SimpleOrderDto(o))
+//                .map(o -> new SimpleOrderDto(o))
+                .map(SimpleOrderDto::new)
                 .collect(toList());
 
         return result;
@@ -62,8 +64,7 @@ public class OrderSimpleApiController {
 
     /**
      * V3. 엔티티를 조회해서 DTO로 변환(fetch join 사용O)
-     * - fetch join으로 쿼리 1번 호출
-     * 참고: fetch join에 대한 자세한 내용은 JPA 기본편 참고(정말 중요함)
+     * - fetch join으로 쿼리 1번 호출해 모든 데이터 가져옴
      */
     @GetMapping("/api/v3/simple-orders")
     public List<SimpleOrderDto> ordersV3() {
@@ -85,7 +86,7 @@ public class OrderSimpleApiController {
 
         private Long orderId;
         private String name;
-        private LocalDateTime orderDate; //주문시간
+        private LocalDateTime orderDate;    //주문시간
         private OrderStatus orderStatus;
         private Address address;
 
