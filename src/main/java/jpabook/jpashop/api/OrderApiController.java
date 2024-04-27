@@ -67,8 +67,6 @@ public class OrderApiController {
         return all;
     }
 
-
-
     @GetMapping("/api/v2/orders")
     public List<OrderDto> ordersV2() {
         List<Order> orders = orderRepository.findAll();
@@ -78,7 +76,6 @@ public class OrderApiController {
 
         return result;
     }
-
 
     /**
      * fetch-join 사용 => join된 모든 Table의 컬럼을 가져옴
@@ -93,7 +90,6 @@ public class OrderApiController {
 
         return result;
     }
-
 
     /**
      *V3.1 엔티티를 조회해서 DTO로 변환 페이징 고려
@@ -111,8 +107,6 @@ public class OrderApiController {
 
         return result;
     }
-
-
     @GetMapping("/api/v4/orders")
     public List<OrderQueryDto> ordersV4() {
         return orderQueryRepository.findOrderQueryDtos();
