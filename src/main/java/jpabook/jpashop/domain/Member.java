@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 public class Member {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "member_id")
     private Long id;
 
@@ -21,6 +23,7 @@ public class Member {
     @Embedded
     private Address address;
 
+    //** 양방향 연관관계에서는 한쪽을 JsonIgnore로 설정해야 함
     @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
