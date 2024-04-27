@@ -51,7 +51,7 @@ public class OrderApiController {
     private final OrderQueryRepository orderQueryRepository;
 
     /**
-     * V1. 엔티티 직접 노출 => 이렇게 사용하지 말것
+     * V1. 엔티티 직접 노출 => !!이렇게 사용하지 말것!!
      * - Hibernate5Module 모듈 등록, LAZY=null 처리
      * - 양방향 관계 문제 발생 -> @JsonIgnore
      */
@@ -80,6 +80,10 @@ public class OrderApiController {
     }
 
 
+    /**
+     * fetch-join 사용 => join된 모든 Table의 컬럼을 가져옴
+     * ...queryDsl 사용하는게 최선
+     * */
     @GetMapping("/api/v3/orders")
     public List<OrderDto> ordersV3() {
         List<Order> orders = orderRepository.findAllWithItem();
@@ -90,8 +94,9 @@ public class OrderApiController {
         return result;
     }
 
+
     /**
-     * V3.1 엔티티를 조회해서 DTO로 변환 페이징 고려
+     *V3.1 엔티티를 조회해서 DTO로 변환 페이징 고려
      * - ToOne 관계만 우선 모두 페치 조인으로 최적화
      * - 컬렉션 관계는 hibernate.default_batch_fetch_size, @BatchSize로 최적화
      */
@@ -106,6 +111,7 @@ public class OrderApiController {
 
         return result;
     }
+
 
     @GetMapping("/api/v4/orders")
     public List<OrderQueryDto> ordersV4() {
@@ -153,8 +159,8 @@ public class OrderApiController {
     }
 
     /**
-     * 껍데기만 Dto로 노출하는 것이 아닌,
-     * 그 내부도 Dto로 노출시켜야 함
+     * !껍데기만 Dto로 노출하는 것이 아닌,
+     * 그 내부도 Dto로 노출시켜야 함!
      * (단, Address 같은 valueObject는 노출시켜도 ok)
      * */
     @Data
