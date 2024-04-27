@@ -29,13 +29,16 @@ import static java.util.stream.Collectors.*;
  *
  * V2. 엔티티를 조회해서 DTO로 변환(fetch join 사용X)
  * - 트랜잭션 안에서 지연 로딩 필요
+ *
  * V3. 엔티티를 조회해서 DTO로 변환(fetch join 사용O)
  * - 페이징 시에는 N 부분을 포기해야함(대신에 batch fetch size? 옵션 주면 N -> 1 쿼리로 변경 가능)
  *
  * V4. JPA에서 DTO로 바로 조회, 컬렉션 N 조회 (1 + N Query)
  * - 페이징 가능
+ *
  * V5. JPA에서 DTO로 바로 조회, 컬렉션 1 조회 최적화 버전 (1 + 1 Query)
  * - 페이징 가능
+ *
  * V6. JPA에서 DTO로 바로 조회, 플랫 데이터(1Query) (1 Query)
  * - 페이징 불가능...
  *
@@ -48,7 +51,7 @@ public class OrderApiController {
     private final OrderQueryRepository orderQueryRepository;
 
     /**
-     * V1. 엔티티 직접 노출
+     * V1. 엔티티 직접 노출 => 이렇게 사용하지 말것
      * - Hibernate5Module 모듈 등록, LAZY=null 처리
      * - 양방향 관계 문제 발생 -> @JsonIgnore
      */
@@ -64,15 +67,18 @@ public class OrderApiController {
         return all;
     }
 
+
+
     @GetMapping("/api/v2/orders")
     public List<OrderDto> ordersV2() {
         List<Order> orders = orderRepository.findAll();
         List<OrderDto> result = orders.stream()
-                .map(o -> new OrderDto(o))
+                .map(OrderDto::new)
                 .collect(toList());
 
         return result;
     }
+
 
     @GetMapping("/api/v3/orders")
     public List<OrderDto> ordersV3() {
@@ -131,6 +137,7 @@ public class OrderApiController {
         private LocalDateTime orderDate; //주문시간
         private OrderStatus orderStatus;
         private Address address;
+        //OrderItem도 OrderItemDto로 새롭게 만들어야 함
         private List<OrderItemDto> orderItems;
 
         public OrderDto(Order order) {
@@ -145,12 +152,17 @@ public class OrderApiController {
         }
     }
 
+    /**
+     * 껍데기만 Dto로 노출하는 것이 아닌,
+     * 그 내부도 Dto로 노출시켜야 함
+     * (단, Address 같은 valueObject는 노출시켜도 ok)
+     * */
     @Data
     static class OrderItemDto {
 
-        private String itemName;//상품 명
-        private int orderPrice; //주문 가격
-        private int count;      //주문 수량
+        private String itemName;    //상품 명
+        private int orderPrice;     //주문 가격
+        private int count;          //주문 수량
 
         public OrderItemDto(OrderItem orderItem) {
             itemName = orderItem.getItem().getName();
